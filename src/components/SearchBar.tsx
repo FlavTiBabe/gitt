@@ -34,24 +34,43 @@ const SearchBar = () => {
   };
 
   return (
-    <div>
-      <input type="text" value={input} onChange={handleChange} onKeyDown={handleKeyDown} />
-      
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center mb-8">
+        <img
+          src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          alt="GitHub logo"
+          className="w-48"
+        />
+        <h1 className="text-4xl font-bold">GitHub Search</h1>
+      </div>
+      <input
+        type="text"
+        className="w-full px-4 py-2 mb-4 text-lg border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
+        value={input}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        placeholder="Enter your search query"
+      />
+
       {loading ? (
-        <p>Loading...</p>
+        <p className="text-lg">Loading...</p>
       ) : (
         <>
-      
-          <p>Found {resultCount} results:</p>
-          <main className='flex flex-col gap-5  w-screen justify-center'>
-            {results.map((result) => (
-              <section key={result.url}>
-                <HoverCard {...result}></HoverCard>
-              </section>
-            ))}
-          </main>
-          <div className='w-screen flex justify-center'>
-            <button className="h-[70px] text-lg bg-blue-400 border-4 text-white border-black rounded-md" onClick={()=>handleNextPage()}>Show more</button>
+          <p className="text-lg mb-2">Found {resultCount} results:</p>
+          <div className="w-full">
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {results.map((result) => (
+                <HoverCard key={result.url} {...result} />
+              ))}
+            </div>
+          </div>
+          <div className="mt-4">
+            <button
+              className="w-full h-12 px-4 text-lg text-white bg-blue-400 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={handleNextPage}
+            >
+              Show more
+            </button>
           </div>
         </>
       )}
