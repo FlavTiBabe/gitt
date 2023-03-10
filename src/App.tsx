@@ -3,7 +3,7 @@ import SearchBar from '~/components/SearchBar';
 
 const App = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center">
       <SearchBar />
     </div>
   );

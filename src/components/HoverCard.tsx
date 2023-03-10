@@ -2,8 +2,13 @@ import React from 'react';
 import * as HoverCard from '@radix-ui/react-hover-card';
 import type { SearchResults } from '~/hooks/useGithubAPI';
 import {Star, Eye, Book, GitFork} from "lucide-react"
+import {motion} from "framer-motion"
 
-const HoverCardDemo = (profile:SearchResults) => (
+interface HoverCardProps extends SearchResults {
+  i: number
+}
+
+const HoverCardDemo = (profile:HoverCardProps) => (
   <HoverCard.Root>
     <HoverCard.Trigger asChild>
       <a
@@ -12,21 +17,30 @@ const HoverCardDemo = (profile:SearchResults) => (
         target="_blank"
         rel="noreferrer noopener"
       >
-        <div className='flex flex-col border-2 rounded-md p-4 bg-gray-100 hover:bg-white hover:shadow-md transition-all'>
+        <motion.div   
+        initial={{
+        opacity: 0,
+      }}
+      whileHover={{ scale: 1.1, cursor: "pointer" }}
+      animate={{ opacity: 1, translateX: 0, translateY: 0 }}
+      transition={{ duration: 0.3, delay: profile.i * 0.1 }}
+      className='flex h-[200px] flex-col border-2 bg-slate-800  relative rounded-md p-4  hover:bg-slate-500 hover:shadow-md transition-all'>
           <div className='flex items-center gap-3'>
             <Book width="15px" className='fill-blue-400'></Book> 
             <span className='text-blue-400 font-bold'>{profile.name}</span> 
             <span className='text-gray-500'>Public</span>
           </div>
-          <div className='text-gray-600 mt-2'>{profile.description}</div> 
-          <div className='flex items-center mt-2'>
+          <p className='text-slate-200 mt-2 text-ellipsis overflow-hidden'>{profile.description}</p> 
+          <div className='flex relative items-center mt-2'>
+            { profile.language &&
             <div className='bg-gray-200 rounded-md px-2 py-1 text-gray-600 text-sm'>{profile.language}</div> 
+            }
             <Star width="15px" className='fill-yellow-400 ml-2'/> 
             <div className='text-gray-600 ml-1'>{profile.stargazersCount}</div> 
             <GitFork width="15px" className='fill-gray-400 ml-2'/> 
             <div className='text-gray-600 ml-1'>{profile.forksCount}</div>
           </div>
-        </div>
+        </motion.div>
       </a>
     </HoverCard.Trigger>
     <HoverCard.Portal>
@@ -52,12 +66,10 @@ const HoverCardDemo = (profile:SearchResults) => (
               <div className="flex gap-[5px] items-center">
                 <div className="text-mauve12 m-0 text-[20px] font-bold leading-[1.5]">{profile.stargazersCount}</div>{' '}
                 <div className="text-mauve10 m-0 text-[15px] leading-[1.5]"><Star width="20px" className='fill-yellow-400'></Star></div>
-
-                <div className="text-mauve10 m-0 text-[15px] leading-[1.5]"><Star width="15px"></Star></div>
               </div>
               <div className="flex gap-[5px]">
-                <div className="text-mauve12 m-0 text-[15px] font-medium leading-[1.5]">{profile.watchersCount}</div>{' '}
-                <div className="text-mauve10 m-0 text-[15px] leading-[1.5]"><Eye width="15px"></Eye></div>
+                <div className="text-mauve12 m-0 text-[20px] font-bold leading-[1.5]">{profile.watchersCount}</div>{' '}
+                <div className="text-mauve10 m-0 text-[15px] leading-[1.5]"><Eye width="20px"></Eye></div>
               </div>
             </div>
           </div>
