@@ -24,7 +24,7 @@ const SearchBar = () => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key == "Escape") {
       event.preventDefault();
       setQuery(event.currentTarget.value);
       setCurrentPage(1); // remettre à la page 1 lorsque j'effectue une nouvelle recherche
