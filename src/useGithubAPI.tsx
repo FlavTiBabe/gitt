@@ -22,16 +22,16 @@ type SearchResponse = {
   total_count: number;
 };
 
-const useGithubAPI = (query: string, page: number) => {
+const useGithubAPI = (query: string, currentPage: number, perPage: number) => {
     const [results, setResults] = useState<SearchResults[]>([]);
-    const [totalResults, setTotalResults] = useState<number>(0);
+    const [resultCount, setResultCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
+    const [totalPages, setTotalPages] = useState<number>(0);
   
     useEffect(() => {
       setLoading(true);
-      const perPage = 30; // Nombre de résultats par page
       const fetchData = async () => {
-        const response = await fetch(`https://api.github.com/search/repositories?q=${query}&per_page=${perPage}&page=${page}`);
+        const response = await fetch(`https://api.github.com/search/repositories?q=${query}&per_page=${perPage}&page=${currentPage}`);
         const data: SearchResponse = await response.json();
         const formattedData = data.items.map((item: any) => ({
           name: item.name,
@@ -48,13 +48,13 @@ const useGithubAPI = (query: string, page: number) => {
           },
         }));
         setResults(formattedData);
-        setTotalResults(data.total_count);
+        setResultCount(data.total_count);
+        setTotalPages(Math.ceil(data.total_count / perPage));
         setLoading(false);
       };
       fetchData();
-    }, [query, page]);
+    }, [query, currentPage, perPage]);
   
-    return { results, totalResults, loading };
+    return { results, resultCount, loading, totalPages };
   };
-
 export default useGithubAPI;

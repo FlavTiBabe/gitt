@@ -3,11 +3,14 @@
 import React, { useState } from 'react';
 import useGithubAPI from './useGithubAPI';
 
+const RESULTS_PER_PAGE = 50;
+const MAX_RESULTS = 1000;
+
 const SearchBar = () => {
   const [query, setQuery] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const { results, totalResults, loading } = useGithubAPI(query, currentPage);
-
+  const { results, resultCount, loading } = useGithubAPI(query, (currentPage - 1) * RESULTS_PER_PAGE, RESULTS_PER_PAGE);
+  const totalResults = Math.min(resultCount, MAX_RESULTS);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -17,11 +20,20 @@ const SearchBar = () => {
     if (event.key === 'Enter') {
       event.preventDefault();
       setQuery(event.currentTarget.value);
+      setCurrentPage(1); // remettre à la page 1 lorsque j'effectue une nouvelle recherche
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
   };
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
+    if (currentPage < Math.ceil(totalResults / RESULTS_PER_PAGE)) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   return (
@@ -52,11 +64,15 @@ const SearchBar = () => {
               </li>
             ))}
           </ul>
-          {results.length > 0 && (
-            <button onClick={handleNextPage} disabled={results.length < 10}>
+          <div>
+            <button disabled={currentPage === 1} onClick={handlePrevPage}>
+              Previous
+            </button>
+            <span>Page {currentPage}</span>
+            <button disabled={currentPage === Math.ceil(totalResults / RESULTS_PER_PAGE)} onClick={handleNextPage}>
               Next
             </button>
-          )}
+          </div>
         </>
       )}
     </div>
