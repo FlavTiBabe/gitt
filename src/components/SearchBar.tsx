@@ -31,8 +31,13 @@ const SearchBar = () => {
     }
   };
 
+  const handleSearch = () => {
+    setQuery(input);
+    setCurrentPage(1);
+  };
+
   const handleNextPage = () => {
-      setCurrentPage(currentPage + 1);
+    setCurrentPage(currentPage + 1);
   };
 
   return (
@@ -41,45 +46,52 @@ const SearchBar = () => {
         <Github size="lg" className='text-slate-200'/>
         <h1 className="text-4xl text-slate-200 font-bold">GitHub Search</h1>
       </div>
-      <input
-        type="text"
-        className="w-62 px-4 py-2 mb-4  text-lg border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
-        value={input}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        placeholder="Enter your search query"
-      />
-
-     
-          <p className="text-lg mb-2 text-slate-200">Found {resultCount} results:</p>
-          <div className="w-full">
-            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {loading ? loadingCreator()  :   results.map((result,i) => (
-                <HoverCard key={result.url} i={i} {...result} />
-              ))  }
-              {loadingNext  && loadingCreator()}
-            </div>
-          </div>
-            {
-             results.length > 0 && results.length != resultCount && !loadingNext &&
-            <button
-              className="w-72 h-12 px-4 text-lg text-white bg-blue-400 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              onClick={handleNextPage}
-            >
-              Show more
-            </button>
-            }
+      <div className="flex items-center">
+        <input
+          type="text"
+          className="w-62 px-6 py-3 mb-4  text-lg border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
+          value={input}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Enter your search query"
+        />
+        <button
+          className="mb-4 px-6 py-3 text-xl text-white bg-blue-400 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          onClick={handleSearch}
+        >
+          Search
+        </button>
+      </div>
+      {resultCount > 0 && (
+        <p className="text-lg mb-2 text-slate-200">Found {resultCount} results:</p>
+      )}
+      <div className="w-full">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {loading ? loadingCreator() : results.map((result, i) => (
+            <HoverCard key={result.url} i={i} {...result} />
+          ))}
+          {loadingNext && loadingCreator()}
+        </div>
+      </div>
+      {results.length > 0 && results.length !== resultCount && !loadingNext && (
+        <button
+          className="w-72 h-12 px-4 text-lg text-white bg-blue-400 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          onClick={handleNextPage}
+        >
+          Show more
+        </button>
+      )}
     </div>
   );
 };
 
-const loadingCreator = ()=> {
-  let result:JSX.Element[] = [];
- for (let index = 0; index < RESULTS_PER_PAGE; index++) {
-  result.push(<CardLoading key={`searchLoading${index}`}></CardLoading>)
- }
+const loadingCreator = () => {
+  let result: JSX.Element[] = [];
+  for (let index = 0; index < RESULTS_PER_PAGE; index++) {
+    result.push(<CardLoading key={`searchLoading${index}`} />);
+  }
 
- return result;
-}
+  return result;
+};
 
 export default SearchBar;
