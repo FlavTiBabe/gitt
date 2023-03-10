@@ -1,11 +1,11 @@
 import React from 'react';
-import SearchBar from './SearchBar';
+import SearchBar from '~/components/SearchBar';
 
 const App = () => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
+    <div className=''>
       <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub logo" style={{ width: '200px' }} />
-      <h1 style={{ marginTop: '50px', textAlign: 'center' }}>GitHub Search</h1>
+      <h1>GitHub Search</h1>
       <SearchBar />
     </div>
   );

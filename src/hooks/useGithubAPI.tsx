@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-type SearchResults = {
+export type SearchResults = {
   name: string;
   description: string;
   url: string;
@@ -24,12 +24,23 @@ type SearchResponse = {
 
 const useGithubAPI = (query: string, currentPage: number, perPage: number) => {
     const [results, setResults] = useState<SearchResults[]>([]);
+    const [currentQuery, setCurrentQuery] = useState("");
     const [resultCount, setResultCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
-    const [totalPages, setTotalPages] = useState<number>(0);
+    const [totalPages, setTotalPages] = useState<number|null>(null);
   
     useEffect(() => {
-      setLoading(true);
+      if(query == "") return;
+      if(totalPages == currentPage && query == currentQuery) return;
+
+      if(query != currentQuery){ 
+        setLoading(true);
+        setResults([]);
+      }
+      setCurrentQuery(query);
+      console.log(currentPage);
+      setTotalPages(currentPage);
+
       const fetchData = async () => {
         const response = await fetch(`https://api.github.com/search/repositories?q=${query}&per_page=${perPage}&page=${currentPage}`);
         const data: SearchResponse = await response.json();
@@ -47,14 +58,21 @@ const useGithubAPI = (query: string, currentPage: number, perPage: number) => {
             htmlUrl: item.owner.html_url,
           },
         }));
+        if(currentPage == 1){
         setResults(formattedData);
         setResultCount(data.total_count);
-        setTotalPages(Math.ceil(data.total_count / perPage));
+        } else {
+         setResults((current)=> [...current, ...formattedData] ) 
+        }
         setLoading(false);
       };
+    
       fetchData();
     }, [query, currentPage, perPage]);
   
     return { results, resultCount, loading, totalPages };
   };
+
+
+
 export default useGithubAPI;
