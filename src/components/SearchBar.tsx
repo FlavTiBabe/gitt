@@ -3,11 +3,10 @@
 import React, { useState } from 'react';
 import useGithubAPI from '~/hooks/useGithubAPI';
 import HoverCard from '~/components/HoverCard';
-import { Github } from 'lucide-react';
+import { Github ,Search } from 'lucide-react';
 import CardLoading from './CardLoading';
 
-const RESULTS_PER_PAGE = 10;
-const MAX_RESULTS = 10;
+const RESULTS_PER_PAGE = 20;
 
 
 
@@ -16,7 +15,6 @@ const SearchBar = () => {
   const [input , setInput] = useState("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { results, resultCount, loading  , loadingNext } = useGithubAPI(query, currentPage ,RESULTS_PER_PAGE);
-  const totalResults = Math.min(resultCount, MAX_RESULTS);
   console.log(results);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,23 +41,23 @@ const SearchBar = () => {
   return (
     <div className="flex flex-col w-full items-center justify-center">
       <div className="flex flex-col items-center justify-center mb-8">
-        <Github size="lg" className='text-slate-200'/>
+        <Github size="lg" className='text-slate-200'></Github>
         <h1 className="text-4xl text-slate-200 font-bold">GitHub Search</h1>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center w-62 px-6 py-3 mb-4  text-lg border border-gray-300 rounded-md focus:outline-none focus:border-blue-400">
         <input
           type="text"
-          className="w-62 px-6 py-3 mb-4  text-lg border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
+          className="bg-transparent outline-none text-slate-200"
           value={input}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder="Enter your search query"
         />
         <button
-          className="mb-4 px-6 py-3 text-xl text-white bg-blue-400 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className=""
           onClick={handleSearch}
         >
-          Search
+          <Search className='text-slate-200 cursor-pointer h-full '/>
         </button>
       </div>
       {resultCount > 0 && (

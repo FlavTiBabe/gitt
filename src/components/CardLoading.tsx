@@ -27,7 +27,5 @@ export default function CardLoading() {
         </div>    
     </div>
   )
-
-   
 }
 
